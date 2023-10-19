@@ -15,14 +15,28 @@ def sentiment_analysis():
         # Analyze the sentiment for each sentence and store thefa results
         results = []
         for sentence in sentences:
-            vs = analyzer.polarity_scores(sentence.strip())
-            results.append("{:-<65} {}".format(sentence, str(vs)))
+            sentiment_dict = analyzer.polarity_scores(sentence.strip())
+            
+            
+            if sentiment_dict["compound"] >= 0.05:
+                results.append("Positive")
+
+            elif sentiment_dict["compound"] <= -0.05:
+                results.append("Negative")
+
+            else:
+                results.append("Neutral")
+            # results.append("{:-<65} {}".format(sentence, str(sentiment_dict)))
+
+        # Generate the output
+        output = '<br>'.join(results)
 
         # Return the results as a string
-        return '<br>'.join(results)
+        return render_template('results.html', output=output)
 
     # Render form template if method is GET
     return render_template('form.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
+
